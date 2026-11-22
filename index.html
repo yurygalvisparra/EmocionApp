@@ -1,0 +1,2447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Desarrollo Humano — Brújula Emocional (Modelo Plutchik)</title>
+  <style>
+    /* ==========================================================================
+       SISTEMA DE DISEÑO Y VARIABLES (100% AUTÓNOMO Y OFFLINE)
+       ========================================================================== */
+    :root {
+      --bg-page: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --text-main: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --border-light: #E2E8F0;
+      --border-focus: #3B82F6;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 20px 35px -10px rgba(15, 23, 42, 0.12);
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --accent-primary: #2563EB;
+      --accent-dark: #1E293B;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==========================================================================
+       CABECERA INSTITUCIONAL
+       ========================================================================== */
+    .app-header {
+      background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%);
+      border-bottom: 1px solid var(--border-light);
+      padding: 1.5rem 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Barra superior multicolor inspirada en los 8 pétalos de Plutchik */
+    .plutchik-ribbon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      display: flex;
+    }
+    .plutchik-ribbon span { flex: 1; }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: #FFFFFF;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-titles h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .brand-titles p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .badge-offline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #047857;
+      background-color: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+    }
+
+    /* ==========================================================================
+       CONTENEDOR PRINCIPAL Y BARRA DE PROGRESO
+       ========================================================================== */
+    .main-container {
+      max-width: 960px;
+      width: 100%;
+      margin: 1.75rem auto 3rem;
+      padding: 0 1.25rem;
+      flex: 1;
+    }
+
+    .stepper-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stepper-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.65rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FACC15, #4ADE80, #38BDF8, #3B82F6, #A855F7, #EF4444, #F97316);
+      border-radius: 999px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 20%;
+    }
+
+    /* ==========================================================================
+       TARJETAS DE PASOS Y FORMULARIOS
+       ========================================================================== */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #F1F5F9;
+      padding-bottom: 1rem;
+    }
+
+    .step-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-primary);
+      background: #EFF6FF;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      margin-bottom: 0.45rem;
+    }
+
+    .step-header h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .step-header p {
+      font-size: 0.94rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.35rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      margin-bottom: 0.45rem;
+    }
+
+    .form-hint {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .input-text, .input-textarea, .input-select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      font-family: var(--font-sans);
+      font-size: 0.98rem;
+      color: var(--text-main);
+      background: #FFFFFF;
+      border: 1.5px solid #CBD5E1;
+      border-radius: var(--radius-md);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-text:focus, .input-textarea:focus, .input-select:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+    }
+
+    .input-textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    /* Opciones tipo tarjetas seleccionables */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .option-card {
+      border: 2px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      position: relative;
+    }
+
+    .option-card:hover {
+      border-color: #94A3B8;
+      background: #F8FAFC;
+      transform: translateY(-1px);
+    }
+
+    .option-card.selected {
+      border-color: var(--accent-primary);
+      background: #EFF6FF;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+    }
+
+    .option-title {
+      font-weight: 700;
+      font-size: 0.96rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .option-desc {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Selector directo opcional de la Rueda en Paso 2 */
+    .direct-wheel-toggle {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #CBD5E1;
+    }
+
+    .emotion-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.65rem;
+    }
+
+    .emotion-pill {
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .emotion-pill:hover {
+      transform: scale(1.03);
+    }
+
+    .emotion-pill.active {
+      border-color: #0F172A;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+
+    /* ==========================================================================
+       PASO 3: CALIBRACIÓN DE INTENSIDAD (3 NIVELES DE PLUTCHIK)
+       ========================================================================== */
+    .detected-banner {
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 2px solid transparent;
+    }
+
+    .intensity-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+
+    .intensity-card {
+      border: 2px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #FFFFFF;
+    }
+
+    .intensity-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .intensity-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      margin-bottom: 0.5rem;
+    }
+
+    .intensity-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+
+    /* ==========================================================================
+       PASO 4: 5 RECOMENDACIONES EDITABLES
+       ========================================================================== */
+    .rec-item {
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.15rem;
+      margin-bottom: 0.9rem;
+      background: #FFFFFF;
+      transition: border-color 0.2s;
+    }
+
+    .rec-item:focus-within {
+      border-color: var(--accent-primary);
+    }
+
+    .rec-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.45rem;
+      gap: 0.5rem;
+    }
+
+    .rec-dim {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .rec-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      color: #FFFFFF;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .rec-textarea {
+      width: 100%;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 0.75rem 0.9rem;
+      font-family: var(--font-sans);
+      font-size: 0.93rem;
+      line-height: 1.5;
+      color: var(--text-main);
+      background: #F8FAFC;
+      resize: vertical;
+      min-height: 88px;
+    }
+
+    .rec-textarea:focus {
+      outline: none;
+      background: #FFFFFF;
+      border-color: var(--accent-primary);
+    }
+
+    /* ==========================================================================
+       BOTONES DE NAVEGACIÓN Y MENSAJES DE VALIDACIÓN
+       ========================================================================== */
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.75rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid #F1F5F9;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.78rem 1.45rem;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: #1D4ED8;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #F1F5F9;
+      color: var(--text-main);
+      border: 1px solid #CBD5E1;
+    }
+
+    .btn-secondary:hover {
+      background: #E2E8F0;
+    }
+
+    .btn-success {
+      background: #059669;
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.28);
+    }
+
+    .btn-success:hover {
+      background: #047857;
+      transform: translateY(-1px);
+    }
+
+    .alert-box {
+      display: none;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: #B91C1C;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    /* ==========================================================================
+       PASO 5: REPORTE GRÁFICO EJECUTIVO (FICHA DE AUTOGESTIÓN)
+       ========================================================================== */
+    .report-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.85rem;
+      background: #FFFFFF;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .report-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+
+    .report-sheet {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .report-top-bar {
+      height: 10px;
+      width: 100%;
+    }
+
+    .report-header {
+      padding: 1.75rem 2rem;
+      background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+      border-bottom: 1px solid #E2E8F0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .report-kicker {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .report-student-name {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .report-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.65rem;
+    }
+
+    .meta-pill {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      background: #F1F5F9;
+      color: #334155;
+      border: 1px solid #E2E8F0;
+    }
+
+    .report-visual-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.5rem;
+      padding: 1.75rem 2rem;
+      border-bottom: 1px solid #E2E8F0;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .report-visual-grid {
+        grid-template-columns: 1fr;
+      }
+      .card, .report-header, .report-visual-grid, .report-body-section {
+        padding: 1.25rem;
+      }
+    }
+
+    .wheel-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 1rem;
+    }
+
+    .wheel-caption {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    /* Termómetro / Medidor de Intensidad */
+    .thermometer-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 1.35rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .emotion-highlight-box {
+      padding: 1rem;
+      border-radius: 14px;
+      border-left: 6px solid #000;
+    }
+
+    .thermo-meter-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .thermo-tube {
+      width: 28px;
+      height: 150px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      border: 2px solid #CBD5E1;
+      flex-shrink: 0;
+    }
+
+    .thermo-mercury {
+      width: 100%;
+      border-radius: 999px;
+      transition: height 0.5s ease;
+    }
+
+    .thermo-levels {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 150px;
+      font-size: 0.82rem;
+    }
+
+    .thermo-step {
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+    }
+
+    .thermo-step.active {
+      font-weight: 800;
+      color: var(--text-main);
+      background: #FFFFFF;
+      border-color: #CBD5E1;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .report-body-section {
+      padding: 1.75rem 2rem;
+    }
+
+    .situation-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.15rem 1.35rem;
+      margin-bottom: 1.65rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .report-recs-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .report-rec-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      padding: 0.9rem 1.1rem;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      background: #FFFFFF;
+    }
+
+    .report-rec-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .quote-banner {
+      border-radius: 16px;
+      padding: 1.35rem 1.5rem;
+      text-align: center;
+      border: 1.5px solid transparent;
+    }
+
+    .quote-text {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--text-main);
+      margin-bottom: 0.35rem;
+    }
+
+    .quote-author {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       ENCABEZADO PRINCIPAL
+       ======================================================================== -->
+  <header class="app-header">
+    <div class="plutchik-ribbon">
+      <span style="background:#FACC15"></span>
+      <span style="background:#4ADE80"></span>
+      <span style="background:#10B981"></span>
+      <span style="background:#38BDF8"></span>
+      <span style="background:#3B82F6"></span>
+      <span style="background:#A855F7"></span>
+      <span style="background:#EF4444"></span>
+      <span style="background:#F97316"></span>
+    </div>
+    <div class="header-inner">
+      <div class="brand-group">
+        <div class="brand-logo" aria-hidden="true">
+          <!-- Mini Rueda SVG de marca -->
+          <svg width="32" height="32" viewBox="0 0 100 100">
+            <circle cx="50" cy="22" r="14" fill="#FACC15" opacity="0.9"/>
+            <circle cx="70" cy="30" r="14" fill="#4ADE80" opacity="0.9"/>
+            <circle cx="78" cy="50" r="14" fill="#10B981" opacity="0.9"/>
+            <circle cx="70" cy="70" r="14" fill="#38BDF8" opacity="0.9"/>
+            <circle cx="50" cy="78" r="14" fill="#3B82F6" opacity="0.9"/>
+            <circle cx="30" cy="70" r="14" fill="#A855F7" opacity="0.9"/>
+            <circle cx="22" cy="50" r="14" fill="#EF4444" opacity="0.9"/>
+            <circle cx="30" cy="30" r="14" fill="#F97316" opacity="0.9"/>
+            <circle cx="50" cy="50" r="16" fill="#FFFFFF"/>
+          </svg>
+        </div>
+        <div class="brand-titles">
+          <h1>Mi Desarrollo Humano</h1>
+          <p>Brújula Ejecutiva de Identificación y Gestión Emocional (Modelo Plutchik)</p>
+        </div>
+      </div>
+      <div class="badge-offline">
+        <span>●</span> Modo Autónomo (Sin Conexión)
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       CONTENEDOR PRINCIPAL DEL ASISTENTE
+       ======================================================================== -->
+  <main class="main-container">
+
+    <!-- Barra de progreso -->
+    <div class="stepper-wrapper" id="stepperWrapper">
+      <div class="stepper-top">
+        <span id="stepLabel">Paso 1 de 5: Contexto y Situación</span>
+        <span id="stepPercent">20%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width: 20%;"></div>
+      </div>
+    </div>
+
+    <!-- Alerta de validación -->
+    <div class="alert-box" id="alertBox"></div>
+
+    <!-- ======================================================================
+         PASO 1: IDENTIFICACIÓN DEL PARTICIPANTE Y CONTEXTO
+         ====================================================================== -->
+    <section class="card" id="step1">
+      <div class="step-header">
+        <span class="step-tag">Paso 1 · Punto de Partida</span>
+        <h2>Identificación y Contexto de la Situación</h2>
+        <p>Describe brevemente la experiencia que estás atravesando. Esta información estructurará tu análisis y aparecerá en tu ficha ejecutiva final.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="studentName">Nombre Completo del Participante *</label>
+        <span class="form-hint">Se incluirá en el encabezado de tu reporte gráfico descargable.</span>
+        <input type="text" id="studentName" class="input-text" placeholder="Ej. Dra. Carolina Mendoza / Ing. Andrés Restrepo" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="contextDomain">Ámbito Principal de la Situación *</label>
+        <span class="form-hint">Permite adaptar las estrategias de gestión a tu entorno real.</span>
+        <select id="contextDomain" class="input-select">
+          <option value="Liderazgo y Equipos">Liderazgo, Gestión de Equipos y Toma de Decisiones</option>
+          <option value="Carga y Presión Laboral">Carga Operativa, Plazos y Presión por Resultados</option>
+          <option value="Cambios e Incertidumbre">Cambios Organizacionales, Reestructuración o Incertidumbre</option>
+          <option value="Relaciones Interpersonales">Relaciones Interpersonales, Negociación o Comunicación</option>
+          <option value="Desarrollo Personal">Equilibrio Vida-Trabajo y Desarrollo Personal</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="situationText">Describe la situación o evento detonante *</label>
+        <span class="form-hint">¿Qué ocurrió exactamente? Sé tan específico como desees (tus datos permanecen 100% privados en tu equipo).</span>
+        <textarea id="situationText" class="input-textarea" placeholder="Ej. Se redefinieron los objetivos trimestrales del proyecto sin consultar al equipo técnico, generando tensión en los tiempos de entrega..."></textarea>
+      </div>
+
+      <div class="btn-row" style="justify-content: flex-end;">
+        <button type="button" class="btn btn-primary" onclick="goToStep2()">
+          Continuar a Exploración Emocional →
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         PASO 2: EXPLORACIÓN SOMÁTICA Y COGNITIVA (RAMIFICACIÓN DINÁMICA)
+         ====================================================================== -->
+    <section class="card hidden" id="step2">
+      <div class="step-header">
+        <span class="step-tag">Paso 2 · Brújula Somática y Cognitiva</span>
+        <h2>¿Cómo responde tu cuerpo y tu mente ante esta situación?</h2>
+        <p>Las preguntas se adaptan dinámicamente según tu respuesta inicial para identificar tu familia emocional primaria.</p>
+      </div>
+
+      <!-- Pregunta 2A: Respuesta Física / Energética -->
+      <div class="form-group">
+        <label class="form-label">1. ¿Cuál es la señal física o nivel de energía predominante que percibes?</label>
+        <div class="options-grid" id="somaticOptions">
+          <div class="option-card" data-somatic="alta_tension" onclick="selectSomatic('alta_tension', this)">
+            <div class="option-title">⚡ Activación y Tensión Alta</div>
+            <div class="option-desc">Calor, rigidez muscular, aceleración, impulso de reaccionar o defender postura.</div>
+          </div>
+          <div class="option-card" data-somatic="alerta_enfoque" onclick="selectSomatic('alerta_enfoque', this)">
+            <div class="option-title">🎯 Alerta, Expectativa o Sobresalto</div>
+            <div class="option-desc">Mente acelerada analizando escenarios, estado de vigilia o impacto ante algo inesperado.</div>
+          </div>
+          <div class="option-card" data-somatic="retraimiento" onclick="selectSomatic('retraimiento', this)">
+            <div class="option-title">🛡️ Retraimiento, Peso o Cautela</div>
+            <div class="option-desc">Sensación de nudo, cansancio, necesidad de protegerse, tomar distancia o bajar el ritmo.</div>
+          </div>
+          <div class="option-card" data-somatic="apertura_calma" onclick="selectSomatic('apertura_calma', this)">
+            <div class="option-title">🌿 Apertura, Claridad o Conexión</div>
+            <div class="option-desc">Respiración fluida, sensación de logro, respaldo mutuo o disposición constructiva.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pregunta 2B: Ramificación Dinámica según 2A -->
+      <div class="form-group hidden" id="cognitiveBranchGroup">
+        <label class="form-label" id="cognitiveBranchLabel">2. Pensamiento dominante o impulso de acción:</label>
+        <div class="options-grid" id="cognitiveOptions"></div>
+      </div>
+
+      <!-- Opción alternativa: Selección directa de las 8 familias de Plutchik -->
+      <div class="direct-wheel-toggle">
+        <span class="form-hint">¿Ya tienes claridad sobre cuál de las 8 emociones primarias de Plutchik predomina? También puedes seleccionarla directamente aquí:</span>
+        <div class="emotion-pills" id="directEmotionPills"></div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="showStep(1)">← Volver al Paso 1</button>
+        <button type="button" class="btn btn-primary" onclick="goToStep3()">Calibrar Intensidad →</button>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         PASO 3: CALIBRACIÓN DE INTENSIDAD (LOS 3 NIVELES DE PLUTCHIK)
+         ====================================================================== -->
+    <section class="card hidden" id="step3">
+      <div class="step-header">
+        <span class="step-tag">Paso 3 · Calibración de Intensidad (Robert Plutchik)</span>
+        <h2>Define el matiz e intensidad exacta de tu emoción</h2>
+        <p>En la Rueda de Plutchik cada emoción primaria tiene 3 grados de profundidad. Selecciona el nivel que mejor representa tu estado actual.</p>
+      </div>
+
+      <div class="detected-banner" id="detectedBanner">
+        <div>
+          <div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.85;">Familia Emocional Identificada</div>
+          <div style="font-size:1.45rem; font-weight:800;" id="detectedFamilyTitle">Ira</div>
+          <div style="font-size:0.9rem; margin-top:0.2rem;" id="detectedFamilyDesc">Energía orientada a defender límites, corregir injusticias o superar obstáculos.</div>
+        </div>
+        <button type="button" class="btn btn-secondary" style="padding:0.5rem 0.9rem; font-size:0.84rem;" onclick="showStep(2)">Cambiar familia</button>
+      </div>
+
+      <label class="form-label">Selecciona el nivel de intensidad (1: Base/Leve · 2: Moderada/Activa · 3: Alta/Intensa):</label>
+      <div class="intensity-cards" id="intensityCardsContainer"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="personalNuance">Matiz personal o propósito de gestión (Opcional)</label>
+        <span class="form-hint">¿Qué te gustaría lograr al gestionar esta emoción? (Ej. "Mantener la objetividad en la reunión de mañana").</span>
+        <input type="text" id="personalNuance" class="input-text" placeholder="Escribe un objetivo breve o deja en blanco..." />
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="showStep(2)">← Volver al Paso 2</button>
+        <button type="button" class="btn btn-primary" onclick="goToStep4()">Ver 5 Opciones de Gestión →</button>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         PASO 4: 5 ESTRATEGIAS EJECUTIVAS DE GESTIÓN EMOCIONAL
+         ====================================================================== -->
+    <section class="card hidden" id="step4">
+      <div class="step-header">
+        <span class="step-tag">Paso 4 · Plan de Acción en 5 Dimensiones</span>
+        <h2>5 Opciones Estratégicas para Gestionar tu Emoción</h2>
+        <p>Hemos diseñado estas 5 recomendaciones personalizadas según tu emoción, intensidad y ámbito. <strong>Puedes editarlas libremente</strong> si deseas ajustarlas a tu plan de acción antes de generar el reporte gráfico.</p>
+      </div>
+
+      <div id="recommendationsEditor"></div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="showStep(3)">← Ajustar Intensidad</button>
+        <button type="button" class="btn btn-success" onclick="generateFinalReport()">
+          Generar Reporte Gráfico Final ✨
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         PASO 5: REPORTE GRÁFICO EJECUTIVO Y EXPORTACIÓN PNG
+         ====================================================================== -->
+    <section class="hidden" id="step5">
+      <!-- Barra de herramientas fuera del área exportable -->
+      <div class="report-toolbar">
+        <div style="font-size:0.92rem; font-weight:600; color:var(--text-secondary);">
+          Tu ficha ejecutiva está lista. Descárgala como imagen PNG para tu portafolio o evidencia.
+        </div>
+        <div class="report-actions">
+          <button type="button" class="btn btn-secondary" onclick="rotateQuote()" title="Cambiar frase motivacional">
+            ↻ Otra Frase
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="showStep(4)">
+            ✎ Editar Plan
+          </button>
+          <button type="button" class="btn btn-success" onclick="downloadReportPNG()">
+            ⬇ Descargar Reporte en PNG
+          </button>
+          <button type="button" class="btn btn-primary" onclick="resetApp()">
+            + Nueva Evaluación
+          </button>
+        </div>
+      </div>
+
+      <!-- Tarjeta Visual del Reporte -->
+      <div class="report-sheet" id="reportSheet">
+        <div class="report-top-bar" id="repTopBar"></div>
+
+        <div class="report-header">
+          <div>
+            <div class="report-kicker">Mi Desarrollo Humano · Ficha de Autogestión Emocional</div>
+            <h2 class="report-student-name" id="repStudentName">Nombre del Participante</h2>
+            <div class="report-meta">
+              <span class="meta-pill" id="repDate">Fecha: --/--/----</span>
+              <span class="meta-pill" id="repDomain">Ámbito: --</span>
+              <span class="meta-pill" id="repModel">Modelo: Rueda de Robert Plutchik</span>
+            </div>
+          </div>
+          <div id="repEmotionBadge" style="padding:0.65rem 1.1rem; border-radius:14px; font-weight:800; font-size:1.05rem; text-align:right;">
+            Emoción Detectada
+          </div>
+        </div>
+
+        <!-- Visualización Central Doble: Rueda Interactiva + Termómetro -->
+        <div class="report-visual-grid">
+          <div class="wheel-container">
+            <svg id="plutchikWheelSVG" width="330" height="330" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg"></svg>
+            <div class="wheel-caption">Mapa de Robert Plutchik · Pétalo y anillo de intensidad iluminados</div>
+          </div>
+
+          <div class="thermometer-box">
+            <div class="emotion-highlight-box" id="repEmotionCard">
+              <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; opacity:0.8;">Diagnóstico Emocional</div>
+              <div style="font-size:1.35rem; font-weight:800; margin:0.15rem 0;" id="repExactEmotion">Enfado (Familia: Ira)</div>
+              <div style="font-size:0.86rem; line-height:1.4;" id="repEmotionMeaning">Descripción breve</div>
+            </div>
+
+            <div>
+              <div style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:var(--text-secondary); margin-bottom:0.55rem;">
+                Medidor de Intensidad Emocional
+              </div>
+              <div class="thermo-meter-wrap">
+                <div class="thermo-tube">
+                  <div class="thermo-mercury" id="repThermoMercury" style="height: 66%;"></div>
+                </div>
+                <div class="thermo-levels" id="repThermoLevels">
+                  <div class="thermo-step" data-lvl="3">Nivel 3 · Alta / Intensa</div>
+                  <div class="thermo-step" data-lvl="2">Nivel 2 · Moderada / Activa</div>
+                  <div class="thermo-step" data-lvl="1">Nivel 1 · Base / Leve</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Situación, 5 Recomendaciones y Frase Motivacional -->
+        <div class="report-body-section">
+          <div class="situation-card">
+            <div class="section-subtitle">📌 Situación Detonante Analizada</div>
+            <p id="repSituationText" style="font-size:0.96rem; color:var(--text-main); font-weight:500;"></p>
+            <p id="repNuanceText" class="hidden" style="font-size:0.86rem; color:var(--text-secondary); margin-top:0.5rem; font-style:italic;"></p>
+          </div>
+
+          <div class="section-subtitle" style="margin-bottom:0.85rem;">🧭 5 Opciones Estratégicas para Gestionar esta Emoción y Situación</div>
+          <div class="report-recs-list" id="repRecsList"></div>
+
+          <div class="quote-banner" id="repQuoteBanner">
+            <div class="quote-text" id="repQuoteText">«Frase motivacional»</div>
+            <div class="quote-author" id="repQuoteAuthor">— Reflexión de Desarrollo Humano</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       LÓGICA DE LA APLICACIÓN (MODELO PLUTCHIK, RAMIFICACIÓN Y EXPORTACIÓN PNG)
+       ======================================================================== -->
+  <script>
+    /* ------------------------------------------------------------------------
+       1. BASE DE DATOS DEL MODELO DE ROBERT PLUTCHIK (8 FAMILIAS x 3 NIVELES)
+       ------------------------------------------------------------------------ */
+    const PLUTCHIK_DATA = {
+      alegria: {
+        id: 'alegria',
+        family: 'Alegría',
+        angle: -90, // Arriba (12 en punto)
+        colors: {
+          1: '#FEF08A', // Serenidad (suave)
+          2: '#FACC15', // Alegría (vibrante)
+          3: '#CA8A04', // Éxtasis (intenso)
+          bgSoft: '#FEFCE8',
+          border: '#EAB308',
+          textDark: '#854D0E'
+        },
+        levels: {
+          1: { name: 'Serenidad', pct: '35%', desc: 'Calma interior, claridad mental y sensación de equilibrio sostenido.' },
+          2: { name: 'Alegría', pct: '68%', desc: 'Satisfacción activa, entusiasmo por los logros y apertura colaborativa.' },
+          3: { name: 'Éxtasis', pct: '96%', desc: 'Plenitud máxima, euforia creativa y alto impulso de celebración y expansión.' }
+        },
+        familyDesc: 'Emoción vinculada al logro, la conexión positiva, el bienestar y la expansión de recursos personales.',
+        recommendations: {
+          1: [
+            'Regulación Fisiológica (Anclaje Respiratorio y Postural): Adopta una postura erguida con apertura de hombros, toma un vaso de agua fresca de forma pausada y realiza 4 ciclos de respiración coherente (inhala en 5 segundos, exhala en 5 segundos) para estabilizar la variabilidad de la frecuencia cardíaca y fijar este estado de serenidad en tu memoria corporal.',
+            'Reencuadre Cognitivo (Auditoría de Factores de Éxito): Dedica 3 minutos a identificar qué decisiones, hábitos de preparación y criterios propios hicieron posible este resultado, diferenciando el mérito estratégico de los factores externos.',
+            'Acción Estratégica y Límites (Planificación en Estado de Claridad): Aprovecha esta lucidez mental libre de reactividad para definir las 3 prioridades críticas de la semana y establecer bloques de trabajo profundo protegidos de interrupciones.',
+            'Comunicación Asertiva (Reconocimiento Específico): Expresa aprecio genuino y detallado a los colaboradores o colegas que contribuyeron a este entorno favorable, mencionando conductas concretas y su impacto positivo.',
+            'Hábito de Seguimiento (Bitácora de Recursos): Registra en tu agenda o cuaderno ejecutivo las condiciones físicas y mentales de este momento para utilizarlas como protocolo de referencia en días de alta exigencia.'
+          ],
+          2: [
+            'Regulación Fisiológica (Coherencia Cardíaca e Hidratación Consciente): Bebe medio vaso de agua fría lentamente y realiza 5 exhalaciones largas (inhala 4 segundos por nariz, exhala 6 segundos por boca) para modular la activación dopaminérgica y mantener el foco ejecutivo sin dispersión.',
+            'Reencuadre Cognitivo (Visión Prospectiva): Analiza cómo este avance valida tus competencias actuales y proyecta de qué manera puedes escalar este aprendizaje hacia retos organizacionales de mayor alcance.',
+            'Acción Estratégica y Límites (Multiplicación de Impacto): Documenta la buena práctica o solución que funcionó hoy y compártela en una breve minuta o reunión de equipo para elevar el estándar colectivo.',
+            'Comunicación Asertiva (Feedback Inspirador): Comunica los logros alcanzados resaltando tanto el rigor técnico como el esfuerzo colaborativo, fortaleciendo la cohesión y el sentido de propósito compartido.',
+            'Hábito de Seguimiento (Sostenibilidad del Ritmo): Define el siguiente hito medible con plazos realistas y programa pausas activas cada 90 minutos para evitar que el entusiasmo derive en sobrecarga operativa.'
+          ],
+          3: [
+            'Regulación Fisiológica (Respiración Diafragmática de Centramiento): Coloca una mano sobre el abdomen, bebe agua fresca y ejecuta 6 ciclos de respiración abdominal profunda (4 segundos de inhalación, 2 de pausa, 7 de exhalación) para equilibrar la euforia y recuperar plena objetividad analítica.',
+            'Reencuadre Cognitivo (Prudencia Estratégica): Realiza un chequeo de realidad antes de asumir nuevos compromisos; evalúa capacidades instaladas, presupuestos y tiempos con criterio técnico más allá del entusiasmo del momento.',
+            'Acción Estratégica y Límites (Celebración Estructurada): Formaliza un cierre significativo con tu equipo que reconozca el hito alcanzado, delimitando claramente el cierre de esta fase antes de abrir nuevos frentes de trabajo.',
+            'Comunicación Asertiva (Escucha Integradora): Invita a los miembros clave del equipo a expresar sus observaciones y aprendizajes sobre el proceso, asegurando que todas las voces sean integradas en el balance final.',
+            'Hábito de Seguimiento (Estandarización de Excelencia): Convierte la metodología que generó este resultado sobresaliente en una guía o lista de verificación reutilizable para futuros proyectos.'
+          ]
+        }
+      },
+      confianza: {
+        id: 'confianza',
+        family: 'Confianza',
+        angle: -45, // Arriba-Derecha
+        colors: {
+          1: '#BBF7D0',
+          2: '#4ADE80',
+          3: '#16A34A',
+          bgSoft: '#F0FDF4',
+          border: '#22C55E',
+          textDark: '#166534'
+        },
+        levels: {
+          1: { name: 'Aceptación', pct: '35%', desc: 'Disposición abierta a integrar la realidad y colaborar sin resistencia innecesaria.' },
+          2: { name: 'Confianza', pct: '68%', desc: 'Seguridad en las capacidades propias, en el equipo y en la viabilidad del proceso.' },
+          3: { name: 'Admiración', pct: '96%', desc: 'Profundo respeto, inspiración y respaldo total hacia el talento o propósito compartido.' }
+        },
+        familyDesc: 'Emoción que facilita la cooperación, la delegación efectiva, la seguridad psicológica y las alianzas sólidas.',
+        recommendations: {
+          1: [
+            'Regulación Fisiológica (Distensión de Hombros y Mandíbula): Suelta conscientemente la tensión acumulada en cuello y mandíbula, toma un sorbo de agua a temperatura ambiente y realiza 3 suspiros fisiológicos (doble inhalación nasal seguida de exhalación larga) para soltar el impulso de hipercontrol.',
+            'Reencuadre Cognitivo (Distinción de Esferas de Control): Traza una línea clara entre las variables que dependen de tu gestión directa y aquellas que corresponde aceptar del contexto organizacional para invertir tu energía con inteligencia.',
+            'Acción Estratégica y Límites (Delegación Estructurada): Asigna responsabilidades específicas definiendo el resultado esperado y los criterios de calidad, otorgando autonomía real sobre el método de ejecución.',
+            'Comunicación Asertiva (Validación Activa): Parafrasea los argumentos de tu interlocutor antes de proponer ajustes operativos, demostrando apertura genuina y construyendo terreno común.',
+            'Hábito de Seguimiento (Puntos de Control Ligeros): Agenda breves espacios semanales de sincronización basados en indicadores clave, evitando la microgestión diaria.'
+          ],
+          2: [
+            'Regulación Fisiológica (Presencia Somática Serena): Mantén una respiración nasal rítmica y pausada junto con contacto visual relajado durante las interacciones; tu calma fisiológica actúa como regulador emocional para todo el equipo.',
+            'Reencuadre Cognitivo (Enfoque en Fortalezas): Identifica las competencias complementarias de cada integrante involucrado en la situación para apalancar sus talentos naturales.',
+            'Acción Estratégica y Límites (Acuerdos Explícitos de Colaboración): Formaliza compromisos claros de roles, tiempos y canales de escalamiento aprovechando el alto nivel de sintonía y seguridad psicológica actual.',
+            'Comunicación Asertiva (Feedback Transparente): Comparte expectativas y oportunidades de mejora con claridad y respeto, sabiendo que existe una base sólida de confianza mutua que sostiene la conversación.',
+            'Hábito de Seguimiento (Consolidación de Alianzas): Mantén canales abiertos de comunicación interáreas para transformar esta cooperación puntual en una red de apoyo profesional duradera.'
+          ],
+          3: [
+            'Regulación Fisiológica (Anclaje de Atención Plena): Realiza una pausa de 60 segundos enfocada en tu respiración y postura abierta para integrar serenamente el aprendizaje que despierta este referente profesional.',
+            'Reencuadre Cognitivo (Objetividad Equilibrada): Reconoce y valora las virtudes del modelo o líder que admiras manteniendo al mismo tiempo tu propio criterio crítico y sentido de identidad profesional.',
+            'Acción Estratégica y Límites (Modelado de Competencias): Selecciona 2 conductas concretas de liderazgo o ejecución que observas en esta situación y adáptalas a tu propio plan de desarrollo.',
+            'Comunicación Asertiva (Reconocimiento de Impacto): Expresa de manera directa y profesional el valor estratégico que el aporte de esa persona o equipo genera en la organización.',
+            'Hábito de Seguimiento (Mentoría Recíproca): Promueve espacios estructurados de transferencia de conocimiento para multiplicar esas capacidades dentro de tu entorno laboral.'
+          ]
+        }
+      },
+      miedo: {
+        id: 'miedo',
+        family: 'Miedo',
+        angle: 0, // Derecha (3 en punto)
+        colors: {
+          1: '#A7F3D0',
+          2: '#10B981',
+          3: '#047857',
+          bgSoft: '#ECFDF5',
+          border: '#10B981',
+          textDark: '#065F46'
+        },
+        levels: {
+          1: { name: 'Temor / Cautela', pct: '35%', desc: 'Inquietud preventiva frente a posibles riesgos o escenarios poco familiares.' },
+          2: { name: 'Miedo', pct: '68%', desc: 'Percepción clara de amenaza o vulnerabilidad que exige protección y análisis.' },
+          3: { name: 'Terror / Parálisis', pct: '96%', desc: 'Alerta máxima ante un riesgo crítico que puede bloquear la toma de decisiones.' }
+        },
+        familyDesc: 'Sistema natural de protección que advierte sobre riesgos, vacíos de información o amenazas a la estabilidad.',
+        recommendations: {
+          1: [
+            'Regulación Fisiológica (Respiración Cuadrada 4-4-4-4 e Hidratación): Toma un vaso de agua fría y ejecuta 4 ciclos de respiración cuadrada (inhala 4 seg, retén 4 seg, exhala 4 seg, pausa 4 seg) para frenar la descarga inicial de adrenalina y estabilizar el pulso.',
+            'Reencuadre Cognitivo (Auditoría de Hechos vs. Supuestos): Divide una hoja en dos columnas y separa los datos objetivos comprobables de las hipótesis catastróficas anticipadas sobre lo que podría ocurrir.',
+            'Acción Estratégica y Límites (Matriz de Mitigación): Diseña un plan B concreto para el principal riesgo identificado; traducir la inquietud en preparación técnica disuelve la incertidumbre.',
+            'Comunicación Asertiva (Contraste con Pares): Consulta tu análisis de riesgos con un colega de confianza mediante preguntas concretas para validar perspectivas sin alimentar la alarma.',
+            'Hábito de Seguimiento (Foco en las Próximas 24 Horas): Concentra tu agenda únicamente en la primera acción preventiva controlable del día de hoy.'
+          ],
+          2: [
+            'Regulación Fisiológica (Anclaje Sensorial 5-4-3-2-1 y Exhalación Larga): Apoya ambos pies firme en el suelo, bebe agua fresca lentamente, alarga la exhalación a 6-8 segundos y nombra mentalmente 5 cosas que ves, 4 que sientes al tacto y 3 que escuchas para sacar al cerebro del modo amenaza.',
+            'Reencuadre Cognitivo (Inventario de Recursos Propios): Enumera 3 situaciones complejas anteriores que lograste resolver y especifica qué habilidades personales utilizaste en ellas.',
+            'Acción Estratégica y Límites (Segmentación en Micro-Pasos): Divide el reto en bloques pequeños de 30 minutos y aborda primero el componente de menor fricción para recuperar sensación de control.',
+            'Comunicación Asertiva (Solicitud de Claridad): Formula preguntas directas y estructuradas a los responsables clave para obtener información faltante y reducir la ambigüedad.',
+            'Hábito de Seguimiento (Bitácora de Realidad): Revisa al cierre de la jornada qué riesgos temidos ocurrieron realmente frente a los que solo existieron en la anticipación mental.'
+          ],
+          3: [
+            'Regulación Fisiológica (Activación Vagal con Agua Fría y Suspiro Fisiológico): Lávate el rostro o muñecas con agua fría (estimula el nervio vago y reduce de inmediato la frecuencia cardíaca), bebe agua fresca y realiza 5 suspiros fisiológicos (doble inhalación nasal profunda + exhalación lenta por la boca) antes de tomar cualquier decisión.',
+            'Reencuadre Cognitivo (Foco en Estabilidad Inmediata): Identifica qué áreas de tu trabajo y vida personal permanecen estables y seguras en este instante para desactivar la sensación de amenaza total.',
+            'Acción Estratégica y Límites (Pausa de Contención de 20 Minutos): Posterga decisiones irreversibles durante 20 minutos, selecciona una única acción de contención prioritaria y delega o pospón lo secundario.',
+            'Comunicación Asertiva (Activación de Red de Apoyo): Comunica la situación de forma clara y honesta a un mentor, líder o par de confianza para co-diseñar la respuesta en equipo.',
+            'Hábito de Seguimiento (Protocolo de Descarga Física): Al finalizar la jornada, realiza 15-20 minutos de caminata rápida o estiramiento muscular para metabolizar el cortisol acumulado.'
+          ]
+        }
+      },
+      sorpresa: {
+        id: 'sorpresa',
+        family: 'Sorpresa',
+        angle: 45, // Abajo-Derecha
+        colors: {
+          1: '#BAE6FD',
+          2: '#38BDF8',
+          3: '#0284C7',
+          bgSoft: '#F0F9FF',
+          border: '#0EA5E9',
+          textDark: '#075985'
+        },
+        levels: {
+          1: { name: 'Distracción', pct: '35%', desc: 'Interrupción leve del foco habitual ante un estímulo o cambio inesperado.' },
+          2: { name: 'Sorpresa', pct: '68%', desc: 'Impacto cognitivo ante un evento imprevisto que obliga a reorientar prioridades.' },
+          3: { name: 'Asombro', pct: '96%', desc: 'Desconcierto profundo o admiración intensa ante un giro fuera de todo pronóstico.' }
+        },
+        familyDesc: 'Emoción puente que detiene la rutina automática para reorientar la atención hacia información nueva.',
+        recommendations: {
+          1: [
+            'Regulación Fisiológica (Reseteo Visual y Respiratorio): Aparta la mirada de la pantalla durante 30 segundos, toma un sorbo de agua fresca y realiza 3 respiraciones profundas para limpiar la saturación atencional.',
+            'Reencuadre Cognitivo (Filtro de Urgencia Real): Evalúa con frialdad si el estímulo inesperado requiere intervención inmediata o si puede programarse sin interrumpir tu flujo actual.',
+            'Acción Estratégica y Límites (Protección de Bloques de Foco): Silencia notificaciones no críticas y reorganiza tu lista de pendientes preservando las 2 tareas de mayor impacto estratégico.',
+            'Comunicación Asertiva (Acuse de Recibo con Plazo): Informa de manera breve y profesional en qué horario darás respuesta detallada a la novedad recibida.',
+            'Hábito de Seguimiento (Higiene de Interrupciones): Registra al final del día qué tipo de imprevistos fragmentaron tu atención para establecer filtros preventivos.'
+          ],
+          2: [
+            'Regulación Fisiológica (Pausa de Centramiento y Hidratación): Antes de responder correos o intervenir en la reunión, bebe medio vaso de agua y realiza 4 ciclos de respiración 4-2-6 (inhala 4 seg, sostén 2 seg, exhala 6 seg) para reorganizar tu corteza prefrontal.',
+            'Reencuadre Cognitivo (Mapeo Objetivo de Impacto): Analiza qué cambia exactamente en alcance, recursos o tiempos a partir de este giro imprevisto y qué permanece intacto.',
+            'Acción Estratégica y Límites (Replanificación Táctica): Ajusta el cronograma de trabajo renegociando entregables secundarios para absorber la novedad sin comprometer la calidad.',
+            'Comunicación Asertiva (Preguntas Exploratorias): Indaga los criterios y el contexto detrás del cambio con tono curioso y constructivo ("¿Qué información nueva motivó este ajuste?").',
+            'Hábito de Seguimiento (Alineación Rápida del Equipo): Comunica los nuevos parámetros a todos los involucrados en un mensaje claro para evitar ambigüedades.'
+          ],
+          3: [
+            'Regulación Fisiológica (Anclaje Postural y Descarga de Tensión): Cambia de postura física (ponte de pie o camina 2 minutos), bebe agua fría y realiza 5 respiraciones diafragmáticas lentas para asimilar el impacto del acontecimiento.',
+            'Reencuadre Cognitivo (Suspensión de Supuestos Previos): Reconoce conscientemente que las premisas anteriores cambiaron y observa el nuevo escenario con mentalidad de aprendiz estratégico.',
+            'Acción Estratégica y Límites (Diseño de 3 Escenarios): Traza tres rutas posibles de respuesta (conservadora, intermedia y transformadora) evaluando costos y beneficios de cada una.',
+            'Comunicación Asertiva (Consulta Multicultural / Interdisciplinaria): Reúne las perspectivas de actores clave antes de fijar una postura institucional definitiva.',
+            'Hábito de Seguimiento (Bitácora de Agilidad): Documenta las lecciones aprendidas sobre capacidad de adaptación para fortalecer la resiliencia operativa del equipo.'
+          ]
+        }
+      },
+      tristeza: {
+        id: 'tristeza',
+        family: 'Tristeza',
+        angle: 90, // Abajo (6 en punto)
+        colors: {
+          1: '#BFDBFE',
+          2: '#3B82F6',
+          3: '#1D4ED8',
+          bgSoft: '#EFF6FF',
+          border: '#2563EB',
+          textDark: '#1E40AF'
+        },
+        levels: {
+          1: { name: 'Melancolía / Desánimo', pct: '35%', desc: 'Baja energética suave o nostalgia por una etapa, resultado o expectativa no cumplida.' },
+          2: { name: 'Tristeza', pct: '68%', desc: 'Dolor emocional claro ante una pérdida, cierre o decepción significativa.' },
+          3: { name: 'Pena Profunda', pct: '96%', desc: 'Aflicción intensa que demanda recogimiento, autocompasión y soporte cercano.' }
+        },
+        familyDesc: 'Emoción reflexiva que permite procesar pérdidas, cerrar ciclos y reordenar lo que realmente tiene valor.',
+        recommendations: {
+          1: [
+            'Regulación Fisiológica (Activación Suave, Luz Natural e Hidratación): Toma un vaso completo de agua fresca, sal 5 minutos a caminar bajo luz natural y realiza estiramientos de apertura torácica para oxigenar y elevar suavemente el tono energético.',
+            'Reencuadre Cognitivo (Perspectiva de Proceso): Interpreta el desánimo como una señal biológica de fatiga acumulada o ajuste de expectativas, evitando convertirlo en un juicio global sobre tu capacidad.',
+            'Acción Estratégica y Límites (Micro-Logro Deliberado): Selecciona una tarea concreta de 20 minutos que puedas completar hoy para reactivar la sensación de eficacia y avance.',
+            'Comunicación Asertiva (Conexión Humana Breve): Comparte un café o conversación distendida con un colega de confianza fuera de la presión de indicadores.',
+            'Hábito de Seguimiento (Higiene del Descanso): Establece una hora estricta de desconexión de pantallas esta noche para favorecer la recuperación neuroquímica.'
+          ],
+          2: [
+            'Regulación Fisiológica (Respiración Reconfortante y Calor Corporal): Toma una bebida tibia o agua a temperatura ambiente de forma pausada, coloca una mano sobre el pecho y realiza 6 respiraciones profundas con exhalación suave para calmar la opresión torácica.',
+            'Reencuadre Cognitivo (Extracción de Significado): Pregúntate qué valor importante estaba comprometido en esta situación y qué aprendizaje esencial deja este cierre para tu evolución profesional.',
+            'Acción Estratégica y Límites (Reajuste Temporal de Carga): Reprograma reuniones o entregables no urgentes durante las próximas 24-48 horas para darte margen real de asimilación.',
+            'Comunicación Asertiva (Expresión Sobria y Honesta): Comunica de manera directa y profesional si necesitas espacio o redistribución puntual de alguna tarea operativa.',
+            'Hábito de Seguimiento (Ritual de Cierre): Realiza una acción concreta de orden (archivar documentos, redactar un balance final) para cerrar simbólica y prácticamente la etapa.'
+          ],
+          3: [
+            'Regulación Fisiológica (Contención Somática y Cuidado Básico): Prioriza hidratación constante, alimentación ligera y descanso; practica respiración lenta (inhala 4 seg, exhala 6 seg) acompañada de caminata suave al aire libre para aliviar la pesadez física.',
+            'Reencuadre Cognitivo (Autocompasión Ejecutiva): Trátate con la misma consideración y respeto profesional con el que acompañarías a un colega cercano atravesando una pérdida significativa.',
+            'Acción Estratégica y Límites (Delegación de Emergencia): Transfiere temporalmente las responsabilidades delegables a tu equipo o pares, enfocándote solo en lo estrictamente inaplazable.',
+            'Comunicación Asertiva (Transparencia con Límites): Informa con serenidad a tus interlocutores clave sobre tu situación para ajustar expectativas de disponibilidad sin sobrecargarte.',
+            'Hábito de Seguimiento (Red de Soporte Especializado): Mantén contacto cercano con tu círculo de confianza y apóyate en orientación psicológica o de bienestar si la aflicción persiste.'
+          ]
+        }
+      },
+      aversion: {
+        id: 'aversion',
+        family: 'Aversión',
+        angle: 135, // Abajo-Izquierda
+        colors: {
+          1: '#E9D5FF',
+          2: '#A855F7',
+          3: '#7E22CE',
+          bgSoft: '#FAF5FF',
+          border: '#9333EA',
+          textDark: '#6B21A8'
+        },
+        levels: {
+          1: { name: 'Aburrimiento / Tedio', pct: '35%', desc: 'Desconexión por falta de reto, sentido o novedad en la tarea o entorno.' },
+          2: { name: 'Aversión / Rechazo', pct: '68%', desc: 'Incomodidad marcada ante prácticas, actitudes o dinámicas que chocan con tus estándares.' },
+          3: { name: 'Asco / Repulsión Moral', pct: '96%', desc: 'Rechazo visceral frente a conductas que vulneran principios éticos o valores fundamentales.' }
+        },
+        familyDesc: 'Radar de valores y estándares que señala saturación, incongruencia ética o necesidad de depuración.',
+        recommendations: {
+          1: [
+            'Regulación Fisiológica (Cambio Postural y Activación Sensorial): Ponte de pie, bebe un vaso de agua fría con limón o fresca, estira brazos y espalda durante 2 minutos y cambia de espacio físico si es posible para romper la monotonía neurológica.',
+            'Reencuadre Cognitivo (Conexión con el Propósito Final): Vincula la tarea operativa repetitiva con el impacto concreto que genera en el cliente final o en el éxito global del proyecto.',
+            'Acción Estratégica y Límites (Rediseño e Innovación de Proceso): Propón una mejora, plantilla o automatización que reduzca el tiempo operativo de esta actividad.',
+            'Comunicación Asertiva (Intercambio Creativo): Solicita una breve sesión de lluvia de ideas con alguien de otra área para oxigenar tu perspectiva sobre el trabajo.',
+            'Hábito de Seguimiento (Bloques Alternados): Estructura tu jornada alternando 60 minutos de tarea rutinaria con 30 minutos de trabajo analítico o creativo.'
+          ],
+          2: [
+            'Regulación Fisiológica (Relajación Facial y Exhalación Controlada): Destensa el entrecejo y la mandíbula (donde se expresa físicamente el rechazo), bebe agua fresca y realiza 4 exhalaciones prolongadas para evitar gestos o respuestas sarcásticas.',
+            'Reencuadre Cognitivo (Identificación del Valor Vulnerado): Traduce el malestar visceral en lenguaje profesional claro: identifica exactamente qué estándar de calidad, respeto o rigor sientes comprometido.',
+            'Acción Estratégica y Límites (Delimitación de Estándares): Define con precisión qué prácticas operativas estás dispuesto a avalar y qué condiciones mínimas exiges para continuar.',
+            'Comunicación Asertiva (Feedback Basado en Hechos): Expresa tu desacuerdo describiendo conductas y consecuencias verificables, evitando etiquetas o juicios sobre la personalidad del otro.',
+            'Hábito de Seguimiento (Depuración de Agenda): Reduce tu exposición innecesaria a dinámicas o reuniones improductivas siempre que esté dentro de tu margen de decisión.'
+          ],
+          3: [
+            'Regulación Fisiológica (Retirada Física Breve e Hidratación): Sal del espacio o finaliza cordialmente la llamada de inmediato, lávate las manos o rostro con agua fría y bebe agua para disipar la respuesta visceral de repulsión.',
+            'Reencuadre Cognitivo (Claridad Ética e Institucional): Contrasta los hechos observados con tus valores profesionales innegociables y el código de ética o normativa vigente.',
+            'Acción Estratégica y Límites (Documentación Objetiva): Registra fechas, hechos concretos y evidencias verificables de manera neutral por si se requiere respaldo formal.',
+            'Comunicación Asertiva (Escalamiento Formal y Firme): Aborda la situación a través de los canales institucionales pertinentes con argumentos objetivos, tono sereno y absoluta firmeza.',
+            'Hábito de Seguimiento (Evaluación de Alineación): Reflexiona sobre los ajustes estructurales necesarios en tu entorno laboral para sostener tu integridad y bienestar a largo plazo.'
+          ]
+        }
+      },
+      ira: {
+        id: 'ira',
+        family: 'Ira',
+        angle: 180, // Izquierda (9 en punto)
+        colors: {
+          1: '#FECACA',
+          2: '#EF4444',
+          3: '#B91C1C',
+          bgSoft: '#FEF2F2',
+          border: '#DC2626',
+          textDark: '#991B1B'
+        },
+        levels: {
+          1: { name: 'Molestia / Irritación', pct: '35%', desc: 'Fricción leve ante interrupciones, ineficiencias o falta de coordinación.' },
+          2: { name: 'Enfado', pct: '68%', desc: 'Tensión firme ante un límite vulnerado, incumplimiento o trato percibido como injusto.' },
+          3: { name: 'Ira / Furia', pct: '96%', desc: 'Descarga intensa de energía defensiva que requiere enfriamiento antes de actuar.' }
+        },
+        familyDesc: 'Energía de defensa y movilización que surge cuando percibimos injusticia, bloqueo o invasión de límites.',
+        recommendations: {
+          1: [
+            'Regulación Fisiológica (Relajación Muscular de Jacobson e Hidratación): Toma un vaso de agua fría lentamente, aprieta los puños y eleva los hombros durante 5 segundos y suéltalos de golpe mientras exhalas largo por la boca; repite 3 veces para liberar la tensión inicial.',
+            'Reencuadre Cognitivo (Hipótesis de Desorganización): Antes de asumir mala intención, evalúa si la fricción responde a falta de contexto, saturación operativa o falla de comunicación.',
+            'Acción Estratégica y Límites (Ajuste de Reglas Operativas): Propón un acuerdo breve y concreto de coordinación (tiempos de entrega, canales o formatos) para prevenir nuevas interrupciones.',
+            'Comunicación Asertiva (Petición en Primera Persona): Formula tu solicitud enfocada en la solución futura ("Para cumplir el plazo, necesito que validemos este punto antes de las 3:00 p. m.").',
+            'Hábito de Seguimiento (Cierre Rápido de Fricción): Resuelve el inconveniente puntual y evita arrastrar el residuo emocional hacia la siguiente reunión.'
+          ],
+          2: [
+            'Regulación Fisiológica (Respiración 4-7-8 y Pausa Térmica): Bebe un vaso grande de agua fría (ayuda a enfriar la respuesta simpática), inhala en 4 segundos, retén el aire 7 segundos y exhala suavemente en 8 segundos durante 4 ciclos completos antes de hablar o escribir.',
+            'Reencuadre Cognitivo (Separación Persona vs. Proceso): Dirige toda tu firmeza hacia el acuerdo incumplido o la falla del sistema, preservando intacta la dignidad del interlocutor.',
+            'Acción Estratégica y Límites (Regla de las 2 Horas y Límites Claros): Guarda cualquier correo sensible en borradores durante 2 horas y establece condiciones verificables ante futuros incumplimientos.',
+            'Comunicación Asertiva (Modelo CNV Ejecutivo): Expresa el hecho objetivo observado, el impacto concreto en los resultados y la propuesta específica de corrección.',
+            'Hábito de Seguimiento (Acta de Compromisos): Deja por escrito los acuerdos alcanzados con fechas y responsables claros para asegurar trazabilidad.'
+          ],
+          3: [
+            'Regulación Fisiológica (Tiempo Fuera Fisiológico y Descarga de Adrenalina): Sal de la sala o desconéctate 20-30 minutos (tiempo mínimo para metabolizar la descarga de adrenalina), lávate el rostro con agua fría, bebe agua fresca y realiza una caminata enérgica o respiraciones con exhalación doble de larga que la inhalación.',
+            'Reencuadre Cognitivo (Desactivación de Pensamiento Dicotómico): Cuestiona expresiones internas absolutas ("siempre", "nunca", "todo") y analiza todas las variables estructurales que influyeron en el conflicto.',
+            'Acción Estratégica y Límites (Mediación Neutral): Si la decisión o el conflicto es de alto impacto, incorpora un tercero objetivo o instancia formal que facilite una negociación estructurada.',
+            'Comunicación Asertiva (Firmeza Pausada): Intervén solo cuando tu pulso haya bajado, utilizando tono de voz grave, ritmo pausado, postura erguida y argumentos respaldados en datos.',
+            'Hábito de Seguimiento (Descarga Física Post-Jornada): Realiza ejercicio físico moderado al terminar el día para liberar completamente la tensión muscular residual.'
+          ]
+        }
+      },
+      anticipacion: {
+        id: 'anticipacion',
+        family: 'Anticipación',
+        angle: -135, // Arriba-Izquierda
+        colors: {
+          1: '#FED7AA',
+          2: '#F97316',
+          3: '#C2410C',
+          bgSoft: '#FFF7ED',
+          border: '#EA580C',
+          textDark: '#9A3412'
+        },
+        levels: {
+          1: { name: 'Interés / Curiosidad', pct: '35%', desc: 'Atención activa y deseo de explorar oportunidades, ideas o soluciones.' },
+          2: { name: 'Anticipación', pct: '68%', desc: 'Preparación estratégica y proyección hacia resultados o escenarios próximos.' },
+          3: { name: 'Vigilancia / Hipercontrol', pct: '96%', desc: 'Estado de alerta continua buscando prever cada detalle o evitar fallos futuros.' }
+        },
+        familyDesc: 'Motor de planificación, visión futura, preparación estratégica y orientación hacia metas.',
+        recommendations: {
+          1: [
+            'Regulación Fisiológica (Respiración Energizante Equilibrada e Hidratación): Toma un vaso de agua fresca y realiza 5 ciclos de respiración nasal rítmica (4 segundos inhalar, 4 segundos exhalar) sentado con la espalda recta para sostener una atención despejada.',
+            'Reencuadre Cognitivo (Pensamiento Exploratorio): Permítete analizar nuevas posibilidades sin autocrítica prematura, conectando esta curiosidad con los objetivos estratégicos de tu rol.',
+            'Acción Estratégica y Límites (Prototipado Acotado): Diseña una prueba piloto pequeña con recursos limitados para validar tus hipótesis en la práctica real.',
+            'Comunicación Asertiva (Diálogo Generativo): Contrasta tus ideas iniciales con colegas de distintas áreas para enriquecer la propuesta antes de escalarla.',
+            'Hábito de Seguimiento (Priorización 80/20): Selecciona las 2 iniciativas con mayor impacto potencial y archiva el resto en un banco de ideas para evitar dispersión.'
+          ],
+          2: [
+            'Regulación Fisiológica (Anclaje al Presente 3-3-3): Haz una pausa de 2 minutos, bebe agua pausadamente y observa 3 objetos cercanos, escucha 3 sonidos del entorno y mueve 3 partes del cuerpo para evitar que la mente viva exclusivamente en el futuro.',
+            'Reencuadre Cognitivo (Planificación Flexible): Asume el plan como una brújula de orientación estratégica y no como un guion rígido, dejando margen para ajustes sobre la marcha.',
+            'Acción Estratégica y Límites (Hoja de Ruta por Hitos): Traduce tu visión en un cronograma claro con hitos semanales, responsables definidos e indicadores tempranos de alerta.',
+            'Comunicación Asertiva (Alineación de Expectativas): Socializa el plan de trabajo con tu equipo explicando el "para qué" estratégico y escuchando sus aportes operativos.',
+            'Hábito de Seguimiento (Revisión Ágil Semanal): Establece una sesión breve de 20 minutos cada semana para recalibrar prioridades según la evolución real del entorno.'
+          ],
+          3: [
+            'Regulación Fisiológica (Descompresión Vagal y Descanso Visual): Aléjate de todas las pantallas durante 10 minutos, bebe agua fresca, relaja la musculatura ocular mirando un punto lejano y ejecuta 6 ciclos de respiración 4-7-8 para apagar el estado de hipervigilancia.',
+            'Reencuadre Cognitivo (Aceptación de Incertidumbre Sana): Identifica explícitamente qué variables futuras escapan a tu control directo y libera la exigencia de prever cada escenario posible.',
+            'Acción Estratégica y Límites (Delegación sin Doble Revisión): Entrega responsabilidades claras a tu equipo y resiste el impulso de auditar cada paso intermedio una vez acordados los criterios.',
+            'Comunicación Asertiva (Liderazgo Tranquilizador): Comunica prioridades con calma y claridad, evitando contagiar sensación de urgencia permanente o ansiedad anticipatoria al equipo.',
+            'Hábito de Seguimiento (Ritual de Cierre Laboral): Define una hora límite diaria para cerrar correo y pendientes, escribiendo las 3 tareas de mañana para permitir el descanso cognitivo nocturno.'
+          ]
+        }
+      }
+    };
+
+    /* ------------------------------------------------------------------------
+       2. RAMIFICACIÓN DINÁMICA DE PREGUNTAS (PASO 2)
+       ------------------------------------------------------------------------ */
+    const SOMATIC_BRANCHES = {
+      alta_tension: {
+        label: '2. Al sentir activación y tensión alta, ¿cuál es el pensamiento o impulso predominante?',
+        options: [
+          {
+            emotion: 'ira',
+            title: '🔥 Defender límites o corregir una injusticia',
+            desc: 'Sientes que algo es incorrecto, invasivo o incumplido y quieres confrontar o poner un alto.'
+          },
+          {
+            emotion: 'aversion',
+            title: '🚫 Rechazo o incomodidad ética/profesional',
+            desc: 'Sientes desagrado marcado ante una actitud, práctica o dinámica que va contra tus principios.'
+          },
+          {
+            emotion: 'anticipacion',
+            title: '⚙️ Urgencia por controlar y resolver ya',
+            desc: 'Sientes presión por adelantarte a los problemas y asegurar que nada se salga de control.'
+          }
+        ]
+      },
+      alerta_enfoque: {
+        label: '2. En ese estado de alerta y mente activa, ¿qué predomina en tu percepción?',
+        options: [
+          {
+            emotion: 'anticipacion',
+            title: '🧭 Proyectar escenarios y preparar estrategia',
+            desc: 'Estás analizando opciones, preparando próximos pasos o buscando optimizar un resultado.'
+          },
+          {
+            emotion: 'sorpresa',
+            title: '💡 Impacto ante un giro inesperado',
+            desc: 'Ocurrió algo imprevisto que cambió las reglas del juego y estás reacomodando tu enfoque.'
+          },
+          {
+            emotion: 'miedo',
+            title: '⚠️ Evaluar riesgos o posibles consecuencias negativas',
+            desc: 'Tu atención está puesta en prevenir una pérdida, fallo o escenario vulnerable.'
+          }
+        ]
+      },
+      retraimiento: {
+        label: '2. Al experimentar retraimiento o cautela, ¿qué refleja mejor lo que sientes?',
+        options: [
+          {
+            emotion: 'tristeza',
+            title: '🌧️ Pérdida, cierre o expectativa no cumplida',
+            desc: 'Sientes desánimo, nostalgia o pesar por un resultado, vínculo o etapa que cambia.'
+          },
+          {
+            emotion: 'miedo',
+            title: '🛡️ Vulnerabilidad o necesidad de protección',
+            desc: 'Percibes incertidumbre o amenaza y prefieres resguardarte antes de exponerte.'
+          },
+          {
+            emotion: 'aversion',
+            title: '😒 Saturación, tedio o desconexión con el entorno',
+            desc: 'Sientes rechazo o desinterés frente a tareas o dinámicas que percibes sin sentido.'
+          }
+        ]
+      },
+      apertura_calma: {
+        label: '2. Desde esta apertura y claridad, ¿qué sentimiento describe mejor tu estado?',
+        options: [
+          {
+            emotion: 'alegria',
+            title: '☀️ Satisfacción por logros, avance o bienestar',
+            desc: 'Disfrutas un resultado positivo, un momento de lucidez o entusiasmo constructivo.'
+          },
+          {
+            emotion: 'confianza',
+            title: '🤝 Seguridad en el equipo, alianza o respaldo mutuo',
+            desc: 'Sientes tranquilidad al colaborar, delegar o construir sobre bases sólidas de respeto.'
+          },
+          {
+            emotion: 'anticipacion',
+            title: '🚀 Curiosidad e interés por nuevos proyectos',
+            desc: 'Te motiva explorar oportunidades de crecimiento y aprendizaje hacia adelante.'
+          }
+        ]
+      }
+    };
+
+    /* ------------------------------------------------------------------------
+       3. BANCO AMPLIO DE FRASES MOTIVACIONALES (48 FRASES EJECUTIVAS)
+       Categorizadas por familia + banco transversal para evitar repeticiones
+       ------------------------------------------------------------------------ */
+    const MOTIVATIONAL_QUOTES = {
+      alegria: [
+        { text: 'La verdadera plenitud profesional nace cuando nuestros logros conversan en armonía con nuestros valores.', author: 'Reflexión de Liderazgo Consciente' },
+        { text: 'La serenidad en el éxito es la marca de quienes construyen resultados sostenibles y humanos.', author: 'Desarrollo Humano Ejecutivo' },
+        { text: 'Compartir el reconocimiento multiplica la energía del equipo mucho más que retenerlo.', author: 'Principio de Liderazgo Colaborativo' },
+        { text: 'Disfrutar el avance presente nos da la lucidez necesaria para diseñar los retos del mañana.', author: 'Sabiduría Práctica' },
+        { text: 'El entusiasmo guiado por el propósito transforma el trabajo cotidiano en legado profesional.', author: 'Desarrollo Humano' }
+      ],
+      confianza: [
+        { text: 'La confianza no elimina la complejidad, pero convierte a un grupo de individuos en un verdadero equipo.', author: 'Liderazgo Organizacional' },
+        { text: 'Confiar con criterio es el equilibrio maduro entre la apertura humana y la claridad de acuerdos.', author: 'Gestión Ejecutiva' },
+        { text: 'Donde existe seguridad psicológica, florecen la honestidad, la innovación y el compromiso genuino.', author: 'Cultura y Desarrollo Humano' },
+        { text: 'Admirar el talento de otros sin sentir amenaza es señal inequívoca de madurez personal.', author: 'Inteligencia Emocional' },
+        { text: 'Aceptar la realidad tal como es constituye siempre el primer paso para transformarla con sabiduría.', author: 'Filosofía Aplicada' }
+      ],
+      miedo: [
+        { text: 'La valentía profesional no es ausencia de temor, sino decidir con claridad a pesar de la incertidumbre.', author: 'Liderazgo Resiliente' },
+        { text: 'Cuando iluminamos el riesgo con datos y preparación, el miedo deja de mandar y pasa a asesorar.', author: 'Inteligencia Emocional' },
+        { text: 'Ninguna decisión tomada desde el pánico supera a una acción nacida de la pausa y el análisis.', author: 'Gestión Estratégica' },
+        { text: 'La vulnerabilidad reconocida a tiempo se transforma en prudencia, preparación y fortaleza interior.', author: 'Desarrollo Humano' },
+        { text: 'En tiempos inciertos, tu mayor ancla es recordar cuántas veces ya supiste adaptarte y salir adelante.', author: 'Resiliencia Adulta' }
+      ],
+      sorpresa: [
+        { text: 'La agilidad emocional consiste en recibir lo inesperado como información nueva, no como amenaza.', author: 'Adaptabilidad Ejecutiva' },
+        { text: 'Cuando cambia el mapa, la serenidad es la brújula que permite trazar una ruta superior.', author: 'Liderazgo Adaptativo' },
+        { text: 'Entre el estímulo imprevisto y nuestra respuesta reside el espacio donde ejercemos nuestra libertad.', author: 'Inspirado en Viktor Frankl' },
+        { text: 'El asombro bien gestionado abre puertas que la rutina jamás habría considerado.', author: 'Pensamiento Estratégico' },
+        { text: 'La flexibilidad mental es la competencia que distingue a quienes lideran el cambio de quienes lo padecen.', author: 'Desarrollo Humano' }
+      ],
+      tristeza: [
+        { text: 'Honrar el cierre de una etapa es indispensable para abrirle espacio legítimo a lo que está por nacer.', author: 'Inteligencia Emocional' },
+        { text: 'La tristeza profunda no es debilidad; es la forma en que el ser humano recalibra lo que verdaderamente importa.', author: 'Desarrollo Humano' },
+        { text: 'Incluso en los días de menor energía, un paso consciente y amable mantiene vivo el camino.', author: 'Autocompasión Ejecutiva' },
+        { text: 'Las pausas reflexivas preparan el terreno silencioso sobre el cual germinan las mejores decisiones futuras.', author: 'Sabiduría Interior' },
+        { text: 'Darte permiso para sentir sin juzgarte acelera la recuperación y fortalece tu integridad emocional.', author: 'Bienestar Integral' }
+      ],
+      aversion: [
+        { text: 'Nuestros límites éticos son la columna vertebral de nuestra reputación y paz mental.', author: 'Integridad Profesional' },
+        { text: 'La incomodidad ante lo incongruente es una invitación a elevar estándares y comunicar con firmeza.', author: 'Liderazgo Ético' },
+        { text: 'Elegir dónde invertir nuestra energía emocional es una de las decisiones más estratégicas de la vida adulta.', author: 'Gestión Personal' },
+        { text: 'La coherencia entre lo que pensamos, decimos y hacemos disuelve cualquier desgaste innecesario.', author: 'Desarrollo Humano' },
+        { text: 'Rechazar con elegancia lo que no construye es abrir espacio a lo que sí aporta valor.', author: 'Criterio Ejecutivo' }
+      ],
+      ira: [
+        { text: 'La firmeza más respetada es aquella que se expresa con voz serena y argumentos sólidos.', author: 'Comunicación Asertiva' },
+        { text: 'El enfado señala dónde está el límite; la inteligencia emocional decide cómo defenderlo sin destruir puentes.', author: 'Liderazgo Maduro' },
+        { text: 'Dominar el impulso inmediato convierte la energía del conflicto en fuerza constructiva de cambio.', author: 'Autogestión Emocional' },
+        { text: 'Atacar el problema y preservar la dignidad de las personas es el sello del profesional maduro.', author: 'Negociación y Liderazgo' },
+        { text: 'Una pausa de veinte minutos puede ahorrar meses de reparación en una relación laboral.', author: 'Sabiduría Ejecutiva' }
+      ],
+      anticipacion: [
+        { text: 'Planificar con visión es sabiduría; soltar el control de lo impredecible es libertad.', author: 'Liderazgo Consciente' },
+        { text: 'La mejor estrategia combina preparación rigurosa con la serenidad de adaptarse sobre la marcha.', author: 'Gestión Ejecutiva' },
+        { text: 'El futuro se construye con foco en las acciones de hoy, no con ansiedad por el resultado de mañana.', author: 'Desarrollo Humano' },
+        { text: 'La curiosidad estratégica mantiene la mente joven, abierta y siempre dispuesta a aprender.', author: 'Crecimiento Profesional' },
+        { text: 'Dirigir la atención hacia lo que sí está en nuestras manos multiplica nuestra eficacia y bienestar.', author: 'Enfoque Ejecutivo' }
+      ]
+    };
+
+    const REC_DIMENSIONS = [
+      { title: '1. Regulación Fisiológica Inmediata', color: '#0284C7' },
+      { title: '2. Reencuadre Cognitivo', color: '#7E22CE' },
+      { title: '3. Acción Estratégica y Límites', color: '#059669' },
+      { title: '4. Comunicación Asertiva', color: '#D97706' },
+      { title: '5. Hábito de Seguimiento', color: '#DC2626' }
+    ];
+
+    /* ------------------------------------------------------------------------
+       4. ESTADO GLOBAL DE LA APLICACIÓN
+       ------------------------------------------------------------------------ */
+    const state = {
+      step: 1,
+      name: '',
+      domain: 'Liderazgo y Equipos',
+      situation: '',
+      somatic: '',
+      emotionId: 'ira',
+      intensity: 2, // 1, 2 o 3
+      nuance: '',
+      recommendations: [],
+      quoteIndex: 0
+    };
+
+    /* ------------------------------------------------------------------------
+       5. INICIALIZACIÓN DE CONTROLES INTERACTIVOS
+       ------------------------------------------------------------------------ */
+    function initDirectPills() {
+      const container = document.getElementById('directEmotionPills');
+      container.innerHTML = '';
+      Object.values(PLUTCHIK_DATA).forEach(item => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'emotion-pill';
+        pill.textContent = item.family;
+        pill.style.backgroundColor = item.colors[1];
+        pill.style.color = item.colors.textDark;
+        pill.dataset.emotion = item.id;
+        pill.onclick = () => {
+          state.emotionId = item.id;
+          document.querySelectorAll('.emotion-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          // También resaltar en opciones cognitivas si existen
+          document.querySelectorAll('#cognitiveOptions .option-card').forEach(c => {
+            c.classList.toggle('selected', c.dataset.emotion === item.id);
+          });
+        };
+        container.appendChild(pill);
+      });
+    }
+
+    function showAlert(msg) {
+      const box = document.getElementById('alertBox');
+      if (!msg) {
+        box.style.display = 'none';
+        return;
+      }
+      box.textContent = msg;
+      box.style.display = 'block';
+      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function showStep(stepNum) {
+      showAlert('');
+      state.step = stepNum;
+      for (let i = 1; i <= 5; i++) {
+        const sec = document.getElementById('step' + i);
+        if (sec) sec.classList.toggle('hidden', i !== stepNum);
+      }
+
+      const labels = {
+        1: 'Paso 1 de 5: Contexto y Situación',
+        2: 'Paso 2 de 5: Exploración Somática y Cognitiva',
+        3: 'Paso 3 de 5: Calibración de Intensidad (Plutchik)',
+        4: 'Paso 4 de 5: Plan de 5 Opciones de Gestión',
+        5: 'Paso 5 de 5: Reporte Gráfico Ejecutivo'
+      };
+      const pcts = { 1: 20, 2: 40, 3: 65, 4: 85, 5: 100 };
+
+      document.getElementById('stepLabel').textContent = labels[stepNum];
+      document.getElementById('stepPercent').textContent = pcts[stepNum] + '%';
+      document.getElementById('progressFill').style.width = pcts[stepNum] + '%';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ------------------------------------------------------------------------
+       6. NAVEGACIÓN ENTRE PASOS Y RAMIFICACIÓN
+       ------------------------------------------------------------------------ */
+    function goToStep2() {
+      const nameVal = document.getElementById('studentName').value.trim();
+      const domainVal = document.getElementById('contextDomain').value;
+      const sitVal = document.getElementById('situationText').value.trim();
+
+      if (!nameVal) {
+        showAlert('Por favor ingresa tu nombre completo para personalizar tu reporte.');
+        return;
+      }
+      if (sitVal.length < 10) {
+        showAlert('Por favor describe brevemente la situación o detonante (al menos una frase) para contextualizar el análisis.');
+        return;
+      }
+
+      state.name = nameVal;
+      state.domain = domainVal;
+      state.situation = sitVal;
+      showStep(2);
+    }
+
+    function selectSomatic(somaticKey, el) {
+      state.somatic = somaticKey;
+      document.querySelectorAll('#somaticOptions .option-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+
+      const branch = SOMATIC_BRANCHES[somaticKey];
+      const branchGroup = document.getElementById('cognitiveBranchGroup');
+      const branchLabel = document.getElementById('cognitiveBranchLabel');
+      const branchContainer = document.getElementById('cognitiveOptions');
+
+      branchLabel.textContent = branch.label;
+      branchContainer.innerHTML = '';
+
+      branch.options.forEach(opt => {
+        const card = document.createElement('div');
+        card.className = 'option-card';
+        card.dataset.emotion = opt.emotion;
+        if (state.emotionId === opt.emotion) card.classList.add('selected');
+        card.innerHTML = `
+          <div class="option-title">${opt.title}</div>
+          <div class="option-desc">${opt.desc}</div>
+        `;
+        card.onclick = () => {
+          state.emotionId = opt.emotion;
+          document.querySelectorAll('#cognitiveOptions .option-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          document.querySelectorAll('.emotion-pill').forEach(p => {
+            p.classList.toggle('active', p.dataset.emotion === opt.emotion);
+          });
+        };
+        branchContainer.appendChild(card);
+      });
+
+      branchGroup.classList.remove('hidden');
+    }
+
+    function goToStep3() {
+      if (!state.emotionId) {
+        showAlert('Selecciona una respuesta física/cognitiva o elige una familia emocional directamente.');
+        return;
+      }
+
+      const emo = PLUTCHIK_DATA[state.emotionId];
+      const banner = document.getElementById('detectedBanner');
+      banner.style.backgroundColor = emo.colors.bgSoft;
+      banner.style.borderColor = emo.colors.border;
+      banner.style.color = emo.colors.textDark;
+
+      document.getElementById('detectedFamilyTitle').textContent = emo.family;
+      document.getElementById('detectedFamilyDesc').textContent = emo.familyDesc;
+
+      renderIntensityCards();
+      showStep(3);
+    }
+
+    function renderIntensityCards() {
+      const emo = PLUTCHIK_DATA[state.emotionId];
+      const container = document.getElementById('intensityCardsContainer');
+      container.innerHTML = '';
+
+      [1, 2, 3].forEach(lvl => {
+        const info = emo.levels[lvl];
+        const isSelected = state.intensity === lvl;
+        const card = document.createElement('div');
+        card.className = 'intensity-card';
+        if (isSelected) {
+          card.style.borderColor = emo.colors.border;
+          card.style.backgroundColor = emo.colors.bgSoft;
+          card.style.boxShadow = '0 6px 16px rgba(15,23,42,0.08)';
+        }
+
+        const badgeColor = emo.colors[lvl];
+        const badgeText = lvl === 3 ? '#FFFFFF' : '#0F172A';
+
+        card.innerHTML = `
+          <span class="intensity-badge" style="background:${badgeColor}; color:${badgeText};">
+            Nivel ${lvl} · ${lvl === 1 ? 'Intensidad Base' : lvl === 2 ? 'Intensidad Moderada' : 'Intensidad Alta'}
+          </span>
+          <div class="intensity-name" style="color:${emo.colors.textDark};">${info.name}</div>
+          <p style="font-size:0.86rem; color:var(--text-secondary);">${info.desc}</p>
+        `;
+        card.onclick = () => {
+          state.intensity = lvl;
+          renderIntensityCards();
+        };
+        container.appendChild(card);
+      });
+    }
+
+    function goToStep4() {
+      state.nuance = document.getElementById('personalNuance').value.trim();
+      const emo = PLUTCHIK_DATA[state.emotionId];
+      const baseRecs = emo.recommendations[state.intensity];
+
+      // Contextualizar ligeramente la recomendación 3 según el ámbito elegido
+      const contextTail = {
+        'Liderazgo y Equipos': ' (Aplicado a la alineación y toma de decisiones con tu equipo).',
+        'Carga y Presión Laboral': ' (Priorizando foco ejecutivo y gestión realista de tiempos).',
+        'Cambios e Incertidumbre': ' (Manteniendo flexibilidad operativa ante escenarios cambiantes).',
+        'Relaciones Interpersonales': ' (Cuidando el respeto mutuo y la claridad en el vínculo).',
+        'Desarrollo Personal': ' (Fortaleciendo tu equilibrio integral y coherencia personal).'
+      };
+
+      state.recommendations = baseRecs.map((txt, idx) => {
+        if (idx === 2) return txt.replace(/\.$/, '') + (contextTail[state.domain] || '.');
+        return txt;
+      });
+
+      const editor = document.getElementById('recommendationsEditor');
+      editor.innerHTML = '';
+
+      state.recommendations.forEach((recText, idx) => {
+        const dim = REC_DIMENSIONS[idx];
+        const item = document.createElement('div');
+        item.className = 'rec-item';
+        item.innerHTML = `
+          <div class="rec-header">
+            <div class="rec-dim" style="color:${dim.color};">
+              <span class="rec-num" style="background:${dim.color};">${idx + 1}</span>
+              ${dim.title}
+            </div>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Editable</span>
+          </div>
+          <textarea class="rec-textarea" id="recInput_${idx}">${recText}</textarea>
+        `;
+        editor.appendChild(item);
+      });
+
+      showStep(4);
+    }
+
+    /* ------------------------------------------------------------------------
+       7. GENERACIÓN DE LA RUEDA DE PLUTCHIK EN SVG (24 SEGMENTOS)
+       ------------------------------------------------------------------------ */
+    function renderPlutchikWheelSVG(activeEmotionId, activeLevel) {
+      const svg = document.getElementById('plutchikWheelSVG');
+      const cx = 180;
+      const cy = 180;
+      // Radios para los 3 anillos concéntricos (Plutchik: centro = máxima intensidad 3, medio = 2, exterior = 1)
+      const rings = [
+        { level: 3, rInner: 26, rOuter: 68 },
+        { level: 2, rInner: 68, rOuter: 112 },
+        { level: 1, rInner: 112, rOuter: 156 }
+      ];
+
+      const familiesOrder = [
+        'alegria', 'confianza', 'miedo', 'sorpresa',
+        'tristeza', 'aversion', 'ira', 'anticipacion'
+      ];
+
+      let svgContent = `
+        <defs>
+          <filter id="glowShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.35"/>
+          </filter>
+        </defs>
+        <circle cx="${cx}" cy="${cy}" r="168" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+      `;
+
+      const sliceAngle = 45; // 360 / 8
+
+      familiesOrder.forEach((famId, idx) => {
+        const fam = PLUTCHIK_DATA[famId];
+        const centerAngle = -90 + idx * sliceAngle;
+        const startDeg = centerAngle - 20.5;
+        const endDeg = centerAngle + 20.5;
+        const isTargetFamily = famId === activeEmotionId;
+
+        rings.forEach(ring => {
+          const isTargetCell = isTargetFamily && ring.level === activeLevel;
+          const pathD = describeSector(cx, cy, ring.rInner, ring.rOuter, startDeg, endDeg);
+
+          // Color: vibrante si es la emoción detectada, pastel suave si es referencia
+          const fillCol = fam.colors[ring.level];
+          const opacity = isTargetCell ? '1' : (isTargetFamily ? '0.68' : '0.28');
+          const strokeCol = isTargetCell ? '#0F172A' : '#FFFFFF';
+          const strokeW = isTargetCell ? '2.6' : '1.2';
+          const filterAttr = isTargetCell ? 'filter="url(#glowShadow)"' : '';
+
+          svgContent += `<path d="${pathD}" fill="${fillCol}" fill-opacity="${opacity}" stroke="${strokeCol}" stroke-width="${strokeW}" ${filterAttr}/>`;
+        });
+
+        // Etiqueta exterior de cada familia
+        const labelR = 166;
+        const rad = (centerAngle * Math.PI) / 180;
+        const lx = cx + labelR * Math.cos(rad);
+        const ly = cy + labelR * Math.sin(rad);
+
+        let anchor = 'middle';
+        if (Math.cos(rad) > 0.35) anchor = 'start';
+        if (Math.cos(rad) < -0.35) anchor = 'end';
+
+        const fontWeight = isTargetFamily ? '800' : '600';
+        const fontSize = isTargetFamily ? '10.5' : '9';
+        const textFill = isTargetFamily ? fam.colors.textDark : '#64748B';
+
+        // Ajustar coordenadas ligeras para que quepan dentro del viewBox 360x360
+        const adjX = cx + 159 * Math.cos(rad);
+        const adjY = cy + 159 * Math.sin(rad) + (Math.sin(rad) > 0.5 ? 9 : Math.sin(rad) < -0.5 ? -3 : 3);
+
+        svgContent += `<text x="${adjX.toFixed(1)}" y="${adjY.toFixed(1)}" text-anchor="${anchor}" font-family="-apple-system, sans-serif" font-size="${fontSize}" font-weight="${fontWeight}" fill="${textFill}">${fam.family}</text>`;
+      });
+
+      // Núcleo central
+      const activeEmo = PLUTCHIK_DATA[activeEmotionId];
+      svgContent += `
+        <circle cx="${cx}" cy="${cy}" r="25" fill="#FFFFFF" stroke="${activeEmo.colors.border}" stroke-width="2.5"/>
+        <text x="${cx}" y="${cy - 2}" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="7.5" font-weight="800" fill="#0F172A">NIVEL ${activeLevel}</text>
+        <text x="${cx}" y="${cy + 8}" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="6.8" font-weight="700" fill="${activeEmo.colors.textDark}">${activeEmo.levels[activeLevel].pct}</text>
+      `;
+
+      svg.innerHTML = svgContent;
+    }
+
+    function describeSector(cx, cy, rInner, rOuter, startAngleDeg, endAngleDeg) {
+      const startRad = (startAngleDeg * Math.PI) / 180;
+      const endRad = (endAngleDeg * Math.PI) / 180;
+
+      const x1 = cx + rOuter * Math.cos(startRad);
+      const y1 = cy + rOuter * Math.sin(startRad);
+      const x2 = cx + rOuter * Math.cos(endRad);
+      const y2 = cy + rOuter * Math.sin(endRad);
+
+      const x3 = cx + rInner * Math.cos(endRad);
+      const y3 = cy + rInner * Math.sin(endRad);
+      const x4 = cx + rInner * Math.cos(startRad);
+      const y4 = cy + rInner * Math.sin(startRad);
+
+      return [
+        `M ${x1.toFixed(2)} ${y1.toFixed(2)}`,
+        `A ${rOuter} ${rOuter} 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`,
+        `L ${x3.toFixed(2)} ${y3.toFixed(2)}`,
+        `A ${rInner} ${rInner} 0 0 0 ${x4.toFixed(2)} ${y4.toFixed(2)}`,
+        'Z'
+      ].join(' ');
+    }
+
+    /* ------------------------------------------------------------------------
+       8. GENERACIÓN DEL REPORTE FINAL Y SELECCIÓN DE FRASE ÚNICA
+       ------------------------------------------------------------------------ */
+    function computeUniqueQuoteIndex(name, situation, totalQuotes) {
+      // Hash determinista + factor aleatorio suave para variar entre estudiantes
+      const seedStr = (name + '|' + situation + '|' + Date.now()).toLowerCase();
+      let hash = 0;
+      for (let i = 0; i < seedStr.length; i++) {
+        hash = ((hash << 5) - hash) + seedStr.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash) % totalQuotes;
+    }
+
+    function generateFinalReport() {
+      // Recoger las 5 recomendaciones (con las ediciones que haya hecho el usuario)
+      const finalRecs = [];
+      for (let i = 0; i < 5; i++) {
+        const val = document.getElementById('recInput_' + i).value.trim();
+        finalRecs.push(val || state.recommendations[i]);
+      }
+      state.recommendations = finalRecs;
+
+      const emo = PLUTCHIK_DATA[state.emotionId];
+      const lvlInfo = emo.levels[state.intensity];
+
+      // Seleccionar frase motivacional única
+      const quotesPool = MOTIVATIONAL_QUOTES[state.emotionId];
+      state.quoteIndex = computeUniqueQuoteIndex(state.name, state.situation, quotesPool.length);
+
+      // Poblar cabecera del reporte
+      document.getElementById('repTopBar').style.backgroundColor = emo.colors[2];
+      document.getElementById('repStudentName').textContent = state.name;
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('repDate').textContent = 'Fecha: ' + dateStr;
+      document.getElementById('repDomain').textContent = 'Ámbito: ' + state.domain;
+
+      const badge = document.getElementById('repEmotionBadge');
+      badge.style.backgroundColor = emo.colors[state.intensity];
+      badge.style.color = state.intensity === 3 ? '#FFFFFF' : '#0F172A';
+      badge.style.border = `2px solid ${emo.colors.border}`;
+      badge.innerHTML = `<div style="font-size:0.72rem; text-transform:uppercase; opacity:0.85;">Familia: ${emo.family}</div><div>${lvlInfo.name}</div>`;
+
+      // Renderizar Rueda SVG
+      renderPlutchikWheelSVG(state.emotionId, state.intensity);
+
+      // Renderizar Termómetro de Intensidad
+      const emoCard = document.getElementById('repEmotionCard');
+      emoCard.style.backgroundColor = emo.colors.bgSoft;
+      emoCard.style.borderLeftColor = emo.colors[2];
+      emoCard.style.color = emo.colors.textDark;
+
+      document.getElementById('repExactEmotion').textContent = `${lvlInfo.name} (Familia: ${emo.family})`;
+      document.getElementById('repEmotionMeaning').textContent = lvlInfo.desc;
+
+      const mercury = document.getElementById('repThermoMercury');
+      mercury.style.height = lvlInfo.pct;
+      mercury.style.backgroundColor = emo.colors[state.intensity];
+
+      document.querySelectorAll('#repThermoLevels .thermo-step').forEach(el => {
+        const l = parseInt(el.dataset.lvl, 10);
+        el.classList.toggle('active', l === state.intensity);
+        if (l === state.intensity) {
+          el.style.borderColor = emo.colors.border;
+          el.style.backgroundColor = emo.colors.bgSoft;
+        } else {
+          el.style.borderColor = 'transparent';
+          el.style.backgroundColor = 'transparent';
+        }
+      });
+
+      // Situación y matiz
+      document.getElementById('repSituationText').textContent = state.situation;
+      const nuanceEl = document.getElementById('repNuanceText');
+      if (state.nuance) {
+        nuanceEl.textContent = 'Propósito de gestión: «' + state.nuance + '»';
+        nuanceEl.classList.remove('hidden');
+      } else {
+        nuanceEl.classList.add('hidden');
+      }
+
+      // Lista de 5 recomendaciones
+      const recsList = document.getElementById('repRecsList');
+      recsList.innerHTML = '';
+      state.recommendations.forEach((rec, idx) => {
+        const dim = REC_DIMENSIONS[idx];
+        const row = document.createElement('div');
+        row.className = 'report-rec-row';
+        row.innerHTML = `
+          <div class="report-rec-badge" style="background:${dim.color};">${idx + 1}</div>
+          <div>
+            <div style="font-size:0.78rem; font-weight:800; text-transform:uppercase; color:${dim.color}; margin-bottom:0.15rem;">${dim.title.replace(/^\d+\.\s*/, '')}</div>
+            <div style="font-size:0.92rem; color:var(--text-main); line-height:1.45;">${rec}</div>
+          </div>
+        `;
+        recsList.appendChild(row);
+      });
+
+      updateQuoteUI();
+      showStep(5);
+    }
+
+    function updateQuoteUI() {
+      const emo = PLUTCHIK_DATA[state.emotionId];
+      const quotesPool = MOTIVATIONAL_QUOTES[state.emotionId];
+      const q = quotesPool[state.quoteIndex % quotesPool.length];
+
+      const banner = document.getElementById('repQuoteBanner');
+      banner.style.backgroundColor = emo.colors.bgSoft;
+      banner.style.borderColor = emo.colors.border;
+
+      document.getElementById('repQuoteText').textContent = `«${q.text}»`;
+      document.getElementById('repQuoteAuthor').textContent = `— ${q.author}`;
+    }
+
+    function rotateQuote() {
+      state.quoteIndex += 1;
+      updateQuoteUI();
+    }
+
+    /* ------------------------------------------------------------------------
+       9. EXPORTACIÓN NATIVA A IMAGEN PNG DE ALTA RESOLUCIÓN (100% OFFLINE)
+       Dibuja una infografía ejecutiva impecable en HTML5 Canvas y la descarga
+       ------------------------------------------------------------------------ */
+    function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      let currentY = y;
+
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line.trim(), x, currentY);
+          line = words[n] + ' ';
+          currentY += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line.trim(), x, currentY);
+      return currentY + lineHeight;
+    }
+
+    function roundRect(ctx, x, y, w, h, r, fill, stroke, strokeWidth = 1.5) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+      if (fill) {
+        ctx.fillStyle = fill;
+        ctx.fill();
+      }
+      if (stroke) {
+        ctx.lineWidth = strokeWidth;
+        ctx.strokeStyle = stroke;
+        ctx.stroke();
+      }
+    }
+
+    function downloadReportPNG() {
+      const emo = PLUTCHIK_DATA[state.emotionId];
+      const lvlInfo = emo.levels[state.intensity];
+      const quotesPool = MOTIVATIONAL_QUOTES[state.emotionId];
+      const quoteObj = quotesPool[state.quoteIndex % quotesPool.length];
+
+      // Configurar lienzo de alta resolución (1200px de ancho, alto dinámico según texto)
+      const width = 1200;
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = width;
+      tempCanvas.height = 1900;
+      const ctx = tempCanvas.getContext('2d');
+
+      // Calcular altura dinámica de situación y recomendaciones
+      ctx.font = '500 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      const sitLines = Math.max(2, Math.ceil(ctx.measureText(state.situation).width / 1000) + 1);
+      const sitBoxHeight = 72 + sitLines * 26 + (state.nuance ? 34 : 0);
+
+      ctx.font = '500 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      let recsTotalHeight = 0;
+      const recHeights = state.recommendations.map(rec => {
+        const lines = Math.max(2, Math.ceil(ctx.measureText(rec).width / 940) + 1);
+        const h = 52 + lines * 23;
+        recsTotalHeight += h + 14;
+        return h;
+      });
+
+      const totalHeight = 680 + sitBoxHeight + recsTotalHeight + 175;
+
+      // Crear Canvas definitivo con altura exacta
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = totalHeight;
+      const c = canvas.getContext('2d');
+
+      // Fondo general
+      c.fillStyle = '#FFFFFF';
+      c.fillRect(0, 0, width, totalHeight);
+
+      // Franja superior del color de la emoción
+      c.fillStyle = emo.colors[2];
+      c.fillRect(0, 0, width, 16);
+
+      // Cabecera
+      c.fillStyle = '#F8FAFC';
+      c.fillRect(0, 16, width, 154);
+
+      c.fillStyle = '#64748B';
+      c.font = '800 15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.fillText('MI DESARROLLO HUMANO  ·  FICHA DE AUTOGESTIÓN EMOCIONAL', 56, 58);
+
+      c.fillStyle = '#0F172A';
+      c.font = '800 36px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.fillText(state.name, 56, 104);
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+      c.fillStyle = '#475569';
+      c.font = '600 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.fillText(`Fecha: ${dateStr}   |   Ámbito: ${state.domain}   |   Modelo Robert Plutchik`, 56, 138);
+
+      // Badge derecha superior
+      roundRect(c, 840, 44, 304, 92, 16, emo.colors[state.intensity], emo.colors.border, 2.5);
+      c.fillStyle = state.intensity === 3 ? '#FFFFFF' : '#0F172A';
+      c.font = '700 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.textAlign = 'right';
+      c.fillText(`FAMILIA: ${emo.family.toUpperCase()}`, 1122, 76);
+      c.font = '800 26px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.fillText(lvlInfo.name, 1122, 114);
+      c.textAlign = 'left';
+
+      // Línea divisoria cabecera
+      c.strokeStyle = '#E2E8F0';
+      c.lineWidth = 2;
+      c.beginPath();
+      c.moveTo(0, 170);
+      c.lineTo(width, 170);
+      c.stroke();
+
+      // Sección Visual Central (Rueda de Plutchik + Termómetro)
+      const visualY = 198;
+      const visualH = 410;
+
+      // Caja Izquierda: Rueda de Plutchik dibujada vectorialmente en Canvas
+      roundRect(c, 56, visualY, 560, visualH, 20, '#F8FAFC', '#E2E8F0', 1.5);
+      drawPlutchikWheelOnCanvas(c, 336, visualY + 195, state.emotionId, state.intensity);
+
+      c.fillStyle = '#475569';
+      c.font = '700 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.textAlign = 'center';
+      c.fillText('Rueda de Robert Plutchik · Pétalo e intensidad iluminados', 336, visualY + 388);
+      c.textAlign = 'left';
+
+      // Caja Derecha: Diagnóstico y Termómetro de Intensidad
+      roundRect(c, 640, visualY, 504, visualH, 20, '#F8FAFC', '#E2E8F0', 1.5);
+
+      // Tarjeta interna de diagnóstico
+      roundRect(c, 668, visualY + 26, 448, 128, 14, emo.colors.bgSoft, emo.colors.border, 2);
+      c.fillStyle = emo.colors[2];
+      c.fillRect(668, visualY + 26, 8, 128);
+
+      c.fillStyle = emo.colors.textDark;
+      c.font = '800 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.fillText('DIAGNÓSTICO EMOCIONAL', 692, visualY + 52);
+
+      c.font = '800 23px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.fillText(`${lvlInfo.name} (${emo.family})`, 692, visualY + 82);
+
+      c.font = '500 15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      wrapCanvasText(c, lvlInfo.desc, 692, visualY + 108, 405, 20);
+
+      // Termómetro de Intensidad
+      c.fillStyle = '#475569';
+      c.font = '800 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.fillText('MEDIDOR DE INTENSIDAD EMOCIONAL', 668, visualY + 188);
+
+      // Tubo del termómetro
+      const tubeX = 676;
+      const tubeY = visualY + 208;
+      const tubeW = 34;
+      const tubeH = 172;
+      roundRect(c, tubeX, tubeY, tubeW, tubeH, 17, '#E2E8F0', '#CBD5E1', 2);
+
+      const fillRatio = state.intensity === 1 ? 0.35 : state.intensity === 2 ? 0.68 : 0.96;
+      const fillH = Math.round((tubeH - 8) * fillRatio);
+      roundRect(c, tubeX + 4, tubeY + tubeH - 4 - fillH, tubeW - 8, fillH, 13, emo.colors[state.intensity], null);
+
+      // Niveles del termómetro
+      const levelLabels = [
+        { lvl: 3, text: 'Nivel 3 · Alta / Intensa (96%)', y: tubeY + 6 },
+        { lvl: 2, text: 'Nivel 2 · Moderada / Activa (68%)', y: tubeY + 64 },
+        { lvl: 1, text: 'Nivel 1 · Base / Leve (35%)', y: tubeY + 122 }
+      ];
+
+      levelLabels.forEach(item => {
+        const active = item.lvl === state.intensity;
+        roundRect(
+          c,
+          728,
+          item.y,
+          388,
+          44,
+          10,
+          active ? emo.colors.bgSoft : 'transparent',
+          active ? emo.colors.border : 'transparent',
+          2
+        );
+        c.fillStyle = active ? '#0F172A' : '#64748B';
+        c.font = active
+          ? '800 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+          : '500 15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        c.fillText(item.text, 744, item.y + 28);
+      });
+
+      // Bloque de Situación Detonante
+      let curY = visualY + visualH + 28;
+      roundRect(c, 56, curY, 1088, sitBoxHeight, 16, '#F8FAFC', '#E2E8F0', 1.5);
+
+      c.fillStyle = '#475569';
+      c.font = '800 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.fillText('SITUACIÓN DETONANTE ANALIZADA', 80, curY + 32);
+
+      c.fillStyle = '#0F172A';
+      c.font = '500 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      let nextTextY = wrapCanvasText(c, state.situation, 80, curY + 62, 1036, 26);
+
+      if (state.nuance) {
+        c.fillStyle = '#475569';
+        c.font = 'italic 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        c.fillText(`Propósito de gestión: «${state.nuance}»`, 80, nextTextY + 6);
+      }
+
+      curY += sitBoxHeight + 32;
+
+      // Título 5 Recomendaciones
+      c.fillStyle = '#475569';
+      c.font = '800 15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.fillText('5 OPCIONES ESTRATÉGICAS PARA GESTIONAR ESTA EMOCIÓN Y SITUACIÓN', 56, curY);
+      curY += 18;
+
+      state.recommendations.forEach((rec, idx) => {
+        const dim = REC_DIMENSIONS[idx];
+        const boxH = recHeights[idx];
+        roundRect(c, 56, curY, 1088, boxH, 14, '#FFFFFF', '#E2E8F0', 1.5);
+
+        // Círculo numerado
+        c.fillStyle = dim.color;
+        c.beginPath();
+        c.arc(88, curY + 28, 16, 0, Math.PI * 2);
+        c.fill();
+
+        c.fillStyle = '#FFFFFF';
+        c.font = '800 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        c.textAlign = 'center';
+        c.fillText(String(idx + 1), 88, curY + 34);
+        c.textAlign = 'left';
+
+        // Dimensión
+        c.fillStyle = dim.color;
+        c.font = '800 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        c.fillText(dim.title.replace(/^\d+\.\s*/, '').toUpperCase(), 118, curY + 28);
+
+        // Texto recomendación
+        c.fillStyle = '#0F172A';
+        c.font = '500 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        wrapCanvasText(c, rec, 118, curY + 53, 995, 23);
+
+        curY += boxH + 14;
+      });
+
+      curY += 12;
+
+      // Frase Motivacional Final
+      roundRect(c, 56, curY, 1088, 104, 18, emo.colors.bgSoft, emo.colors.border, 2);
+      c.fillStyle = '#0F172A';
+      c.font = 'italic bold 19px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.textAlign = 'center';
+      c.fillText(`«${quoteObj.text}»`, width / 2, curY + 46);
+
+      c.fillStyle = '#475569';
+      c.font = '600 15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      c.fillText(`— ${quoteObj.author}`, width / 2, curY + 78);
+      c.textAlign = 'left';
+
+      // Descargar imagen PNG
+      const safeName = state.name
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9]/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^_|_$/g, '') || 'Participante';
+
+      const link = document.createElement('a');
+      link.download = `Reporte_Emocional_${safeName}.png`;
+      link.href = canvas.toDataURL('image/png');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function drawPlutchikWheelOnCanvas(c, cx, cy, activeEmotionId, activeLevel) {
+      const rings = [
+        { level: 3, rInner: 26, rOuter: 68 },
+        { level: 2, rInner: 68, rOuter: 112 },
+        { level: 1, rInner: 112, rOuter: 156 }
+      ];
+      const familiesOrder = [
+        'alegria', 'confianza', 'miedo', 'sorpresa',
+        'tristeza', 'aversion', 'ira', 'anticipacion'
+      ];
+
+      // Fondo circular blanco
+      c.beginPath();
+      c.arc(cx, cy, 166, 0, Math.PI * 2);
+      c.fillStyle = '#FFFFFF';
+      c.fill();
+      c.lineWidth = 1.5;
+      c.strokeStyle = '#E2E8F0';
+      c.stroke();
+
+      familiesOrder.forEach((famId, idx) => {
+        const fam = PLUTCHIK_DATA[famId];
+        const centerAngle = -90 + idx * 45;
+        const startRad = ((centerAngle - 20.5) * Math.PI) / 180;
+        const endRad = ((centerAngle + 20.5) * Math.PI) / 180;
+        const isTargetFamily = famId === activeEmotionId;
+
+        rings.forEach(ring => {
+          const isTargetCell = isTargetFamily && ring.level === activeLevel;
+          c.save();
+          c.beginPath();
+          c.arc(cx, cy, ring.rOuter, startRad, endRad);
+          c.arc(cx, cy, ring.rInner, endRad, startRad, true);
+          c.closePath();
+
+          c.globalAlpha = isTargetCell ? 1.0 : (isTargetFamily ? 0.68 : 0.28);
+          c.fillStyle = fam.colors[ring.level];
+          c.fill();
+
+          c.globalAlpha = 1.0;
+          c.lineWidth = isTargetCell ? 3 : 1.5;
+          c.strokeStyle = isTargetCell ? '#0F172A' : '#FFFFFF';
+          c.stroke();
+          c.restore();
+        });
+
+        // Etiqueta de familia
+        const rad = (centerAngle * Math.PI) / 180;
+        const lx = cx + 174 * Math.cos(rad);
+        const ly = cy + 174 * Math.sin(rad) + 4;
+
+        c.font = isTargetFamily
+          ? '800 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+          : '600 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        c.fillStyle = isTargetFamily ? fam.colors.textDark : '#64748B';
+
+        if (Math.cos(rad) > 0.35) c.textAlign = 'left';
+        else if (Math.cos(rad) < -0.35) c.textAlign = 'right';
+        else c.textAlign = 'center';
+
+        c.fillText(fam.family, lx, ly);
+      });
+
+      // Centro
+      const activeEmo = PLUTCHIK_DATA[activeEmotionId];
+      c.beginPath();
+      c.arc(cx, cy, 25, 0, Math.PI * 2);
+      c.fillStyle = '#FFFFFF';
+      c.fill();
+      c.lineWidth = 2.5;
+      c.strokeStyle = activeEmo.colors.border;
+      c.stroke();
+
+      c.textAlign = 'center';
+      c.fillStyle = '#0F172A';
+      c.font = '800 9px -apple-system, sans-serif';
+      c.fillText(`NIVEL ${activeLevel}`, cx, cy - 2);
+      c.fillStyle = activeEmo.colors.textDark;
+      c.font = '700 9px -apple-system, sans-serif';
+      c.fillText(activeEmo.levels[activeLevel].pct, cx, cy + 10);
+      c.textAlign = 'left';
+    }
+
+    function resetApp() {
+      state.step = 1;
+      state.situation = '';
+      state.somatic = '';
+      state.intensity = 2;
+      state.nuance = '';
+      document.getElementById('situationText').value = '';
+      document.getElementById('personalNuance').value = '';
+      document.getElementById('cognitiveBranchGroup').classList.add('hidden');
+      document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+      showStep(1);
+    }
+
+    // Inicializar al cargar
+    window.onload = function () {
+      initDirectPills();
+    };
+  </script>
+</body>
+</html>
